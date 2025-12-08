@@ -4,3 +4,23 @@
 
 # Environment Variables
 .env
+
+# Dart/Flutter build artifacts
+.dart_tool/
+build/
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.config.dart
+
+# Coverage
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
