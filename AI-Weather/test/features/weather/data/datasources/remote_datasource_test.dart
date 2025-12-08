@@ -13,7 +13,7 @@ void main() {
 
   setUp(() {
     mockDio = MockDio();
-    datasource = RemoteDatasourceImpl(mockDio);
+    datasource = RemoteDatasourceImpl(mockDio, apiKey: 'test_api_key');
   });
 
   group('fetchByCity', () {

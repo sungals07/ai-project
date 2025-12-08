@@ -23,7 +23,6 @@ void main() {
           weatherRepositoryProvider.overrideWithValue(mockRepository),
         ],
       );
-      final notifier = container.read(weatherNotifierProvider.notifier);
 
       // Assert
       final state = container.read(weatherNotifierProvider);

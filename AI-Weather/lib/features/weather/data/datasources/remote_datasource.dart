@@ -21,15 +21,19 @@ abstract class RemoteDatasource {
 /// Dio를 사용하여 실제 API 통신을 수행합니다.
 class RemoteDatasourceImpl implements RemoteDatasource {
   final Dio dio;
+  final String apiKey;
 
-  RemoteDatasourceImpl(this.dio);
+  RemoteDatasourceImpl(this.dio, {required this.apiKey});
 
   @override
   Future<WeatherModel> fetchByCity(String cityName) async {
     try {
       final response = await dio.get(
         '/weather',
-        queryParameters: {'q': cityName},
+        queryParameters: {
+          'q': cityName,
+          'appid': apiKey,
+        },
       );
 
       if (response.statusCode == 200) {
@@ -59,6 +63,7 @@ class RemoteDatasourceImpl implements RemoteDatasource {
         queryParameters: {
           'lat': latitude,
           'lon': longitude,
+          'appid': apiKey,
         },
       );
 
@@ -86,7 +91,10 @@ class RemoteDatasourceImpl implements RemoteDatasource {
     try {
       final response = await dio.get(
         '/forecast',
-        queryParameters: {'q': cityName},
+        queryParameters: {
+          'q': cityName,
+          'appid': apiKey,
+        },
       );
 
       if (response.statusCode == 200) {

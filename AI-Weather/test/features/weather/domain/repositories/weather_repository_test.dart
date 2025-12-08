@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ai_weather/features/weather/domain/repositories/weather_repository.dart';
-import 'package:ai_weather/features/weather/domain/entities/weather_entity.dart';
-import 'package:ai_weather/core/error/failures.dart';
 
 void main() {
   group('WeatherRepository', () {

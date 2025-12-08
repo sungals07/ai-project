@@ -1,3 +1,4 @@
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ai_weather/features/weather/domain/entities/weather_entity.dart';
 

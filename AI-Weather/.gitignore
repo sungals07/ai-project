@@ -1,0 +1,6 @@
+
+# FVM Version Cache
+.fvm/
+
+# Environment Variables
+.env

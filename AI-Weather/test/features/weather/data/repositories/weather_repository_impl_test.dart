@@ -155,13 +155,6 @@ void main() {
       humidity: 65,
       windSpeed: 3.5,
     );
-    final tWeatherModel = WeatherModel(
-      cityName: 'Seoul',
-      temperature: 22.5,
-      description: 'Clear sky',
-      humidity: 65,
-      windSpeed: 3.5,
-    );
 
     test('should cache weather entity', () async {
       // Arrange
