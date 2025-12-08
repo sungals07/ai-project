@@ -33,24 +33,35 @@ class RemoteDatasourceImpl implements RemoteDatasource {
         queryParameters: {
           'q': cityName,
           'appid': apiKey,
+          'units': 'metric', // 섭씨 온도로 받기
         },
       );
 
       if (response.statusCode == 200) {
-        return WeatherModel.fromJson(response.data);
+        try {
+          return WeatherModel.fromJson(response.data);
+        } catch (e) {
+          throw ServerFailure('Failed to parse weather data: $e');
+        }
       } else {
         throw ServerFailure('Failed to fetch weather: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionTimeout ||
+      if (e.response?.statusCode == 404) {
+        throw ServerFailure('City not found: $cityName');
+      } else if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.sendTimeout ||
           e.type == DioExceptionType.receiveTimeout ||
           e.type == DioExceptionType.connectionError) {
         throw NetworkFailure('Network error: ${e.message}');
       } else {
-        throw ServerFailure('Server error: ${e.message}');
+        final errorMessage = e.response?.data?['message'] as String?;
+        throw ServerFailure(errorMessage ?? 'Server error: ${e.message}');
       }
     } catch (e) {
+      if (e is ServerFailure || e is NetworkFailure) {
+        rethrow;
+      }
       throw ServerFailure('Unexpected error: $e');
     }
   }
@@ -64,11 +75,16 @@ class RemoteDatasourceImpl implements RemoteDatasource {
           'lat': latitude,
           'lon': longitude,
           'appid': apiKey,
+          'units': 'metric', // 섭씨 온도로 받기
         },
       );
 
       if (response.statusCode == 200) {
-        return WeatherModel.fromJson(response.data);
+        try {
+          return WeatherModel.fromJson(response.data);
+        } catch (e) {
+          throw ServerFailure('Failed to parse weather data: $e');
+        }
       } else {
         throw ServerFailure('Failed to fetch weather: ${response.statusCode}');
       }
@@ -79,9 +95,13 @@ class RemoteDatasourceImpl implements RemoteDatasource {
           e.type == DioExceptionType.connectionError) {
         throw NetworkFailure('Network error: ${e.message}');
       } else {
-        throw ServerFailure('Server error: ${e.message}');
+        final errorMessage = e.response?.data?['message'] as String?;
+        throw ServerFailure(errorMessage ?? 'Server error: ${e.message}');
       }
     } catch (e) {
+      if (e is ServerFailure || e is NetworkFailure) {
+        rethrow;
+      }
       throw ServerFailure('Unexpected error: $e');
     }
   }
@@ -94,25 +114,36 @@ class RemoteDatasourceImpl implements RemoteDatasource {
         queryParameters: {
           'q': cityName,
           'appid': apiKey,
+          'units': 'metric', // 섭씨 온도로 받기
         },
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> list = response.data['list'] ?? [];
-        return list.map((json) => WeatherModel.fromJson(json)).toList();
+        try {
+          final List<dynamic> list = response.data['list'] ?? [];
+          return list.map((json) => WeatherModel.fromJson(json)).toList();
+        } catch (e) {
+          throw ServerFailure('Failed to parse forecast data: $e');
+        }
       } else {
         throw ServerFailure('Failed to fetch forecast: ${response.statusCode}');
       }
     } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionTimeout ||
+      if (e.response?.statusCode == 404) {
+        throw ServerFailure('City not found: $cityName');
+      } else if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.sendTimeout ||
           e.type == DioExceptionType.receiveTimeout ||
           e.type == DioExceptionType.connectionError) {
         throw NetworkFailure('Network error: ${e.message}');
       } else {
-        throw ServerFailure('Server error: ${e.message}');
+        final errorMessage = e.response?.data?['message'] as String?;
+        throw ServerFailure(errorMessage ?? 'Server error: ${e.message}');
       }
     } catch (e) {
+      if (e is ServerFailure || e is NetworkFailure) {
+        rethrow;
+      }
       throw ServerFailure('Unexpected error: $e');
     }
   }

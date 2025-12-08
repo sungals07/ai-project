@@ -19,12 +19,32 @@ class WeatherModel with _$WeatherModel {
   }) = _WeatherModel;
 
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
+    // 안전한 파싱을 위한 검증
+    final cityName = json['name'] as String? ?? 'Unknown';
+    
+    final main = json['main'] as Map<String, dynamic>?;
+    if (main == null) {
+      throw FormatException('Missing "main" field in weather data');
+    }
+    final temperature = (main['temp'] as num?)?.toDouble() ?? 0.0;
+    final humidity = (main['humidity'] as num?)?.toInt() ?? 0;
+    
+    final weatherList = json['weather'] as List<dynamic>?;
+    if (weatherList == null || weatherList.isEmpty) {
+      throw FormatException('Missing or empty "weather" array in weather data');
+    }
+    final weather = weatherList[0] as Map<String, dynamic>;
+    final description = (weather['description'] as String?) ?? 'Unknown';
+    
+    final wind = json['wind'] as Map<String, dynamic>?;
+    final windSpeed = (wind?['speed'] as num?)?.toDouble() ?? 0.0;
+    
     return WeatherModel(
-      cityName: json['name'] as String,
-      temperature: (json['main'] as Map<String, dynamic>)['temp'] as double,
-      description: (json['weather'] as List<dynamic>)[0]['description'] as String,
-      humidity: (json['main'] as Map<String, dynamic>)['humidity'] as int,
-      windSpeed: (json['wind'] as Map<String, dynamic>)['speed'] as double,
+      cityName: cityName,
+      temperature: temperature,
+      description: description,
+      humidity: humidity,
+      windSpeed: windSpeed,
     );
   }
 
